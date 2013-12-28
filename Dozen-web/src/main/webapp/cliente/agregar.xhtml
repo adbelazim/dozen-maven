@@ -7,11 +7,12 @@
     <h:head>
         <title>Agregar Cliente</title>
     </h:head>
-    <h:body>        
+    <h:body>
+        
         <h:form>
             <p:growl id="growl" sticky="true" showDetail="true"/>  
 
-            <p:wizard flowListener="#{userWizard.onFlowProcess}">  
+            <p:wizard flowListener="#{agregarCliente.onFlowProcess}">  
 
                 <p:tab id="personal" title="Personal">  
 
@@ -22,14 +23,14 @@
                         <h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">  
                             <h:outputText value="Nombre: *" />  
                             <p:inputText required="true" label="Nombre"  
-                                         value="#{userWizard.user.firstname}" />  
+                                         value="#{agregarCliente.cliente.rut}" />  
 
                             <h:outputText value="Apellido: *" />  
                             <p:inputText required="true" label="Apellido"  
                                          value="#{userWizard.user.lastname}" />  
 
                             <h:outputText value="Rut: *" />  
-                            <p:inputText value="#{userWizard.user.age}" />
+                            <p:inputText value="#{cliente.user.age}" />
 
                             <h:outputText value="Fecha de Nacimiento: *" />  
                             <p:inputText required="true" label="Fecha de Nacimiento"  
