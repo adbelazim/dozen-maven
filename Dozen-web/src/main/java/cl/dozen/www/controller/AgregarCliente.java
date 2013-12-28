@@ -8,7 +8,6 @@ package cl.dozen.www.controller;
 
 import cl.dozen.www.model.Cliente;
 import java.util.logging.Logger;
-import javax.annotation.ManagedBean;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;

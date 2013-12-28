@@ -22,15 +22,15 @@
 
                         <h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">  
                             <h:outputText value="Nombre: *" />  
-                            <p:inputText required="true" label="Nombre"  
-                                         value="#{agregarCliente.cliente.rut}" />  
+                            <h:inputText  required="true" label="Nombre"  
+                                         value="#{agregarCliente.cliente.rutCliente}" />  
 
                             <h:outputText value="Apellido: *" />  
                             <p:inputText required="true" label="Apellido"  
                                          value="#{userWizard.user.lastname}" />  
 
                             <h:outputText value="Rut: *" />  
-                            <p:inputText value="#{cliente.user.age}" />
+                            <p:inputText value="#{cliente.rutCliente}" />
 
                             <h:outputText value="Fecha de Nacimiento: *" />  
                             <p:inputText required="true" label="Fecha de Nacimiento"  
