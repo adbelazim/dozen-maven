@@ -1,139 +1,190 @@
-<?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:ui="http://java.sun.com/jsf/facelets">
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui" >
     <h:head>
-        <title>Agregar Cliente</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
     </h:head>
-    <h:body>
-        
+    
+    <f:event listener="#{agregarCliente.beginConversation()}"
+  type="preRenderView"></f:event>
+
+    <h:form id="form">
+        <p:wizard  widgetVar="wiz" flowListener="#{agregarCliente.onFlowProcess}">
+            <p:tab id="personal" title="Información Personal">
+                <p:panel  header="Datos Cliente" >
+                    <h:panelGrid  columns="3">
+                        <h:outputLabel for="rut" value="Rut"/>
+                        <p:inputText required="true" requiredMessage="Campo Requerido" id="rut" value="#{agregarCliente.cliente.clienteRut}"  > 
+<!--                            <f:validator validatorId="rutValidator" />-->
+<!--                            <p:ajax event="blur" update="msgRut" />-->
+                        </p:inputText>
+                        <p:message id="msgRut" for="rut"  />
+                        <h:outputLabel for="nombre" value="Nombre"/>
+                        <p:inputText  id="nombre" value="#{agregarCliente.cliente.clienteNombre}" required="true" requiredMessage="Campo requerido">
+<!--                            <p:ajax event="blur" update="msgNombre" />-->
+                        </p:inputText>
+                        <p:message id="msgNombre" for="nombre"  />
+                        <h:outputLabel  for="apellidos" value="Apellidos" />
+                        <p:inputText id ="apellidos"  value="#{agregarCliente.cliente.clienteApellido}" required="true" requiredMessage="Campo requerido">
+<!--                            <p:ajax event="blur" update="msgApellidos" />-->
+                        </p:inputText>
+                        <p:message id="msgApellidos" for="apellidos"  />
+                        <h:outputLabel  for="fechanac" value="Fecha Nacimiento"/>
+                        <p:calendar  pattern="dd/MM/yyyy"  yearRange="1900" id="fechanac" value="#{agregarCliente.cliente.clienteFechaNacimiento}" required="true" requiredMessage="Campo requerido" navigator="true" >
+<!--                            <p:ajax event="blur" update="msgFechanac" />-->
+                        </p:calendar>
+                        <p:message id="msgFechanac" for="fechanac" /> 
+                        <h:outputLabel  for="sexo" value="Sexo"/>
+                        <p:selectOneRadio  id="sexo" value="#{agregarCliente.cliente.clienteSexo}" required="true" requiredMessage="Campo requerido">  
+                            <f:selectItem itemLabel="Masculino" itemValue="Masculino"/>
+                            <f:selectItem itemLabel="Femenino" itemValue="Femenino"/>
+<!--                            <p:ajax event="blur" update="msgSexo" />-->
+                        </p:selectOneRadio>
+                        <p:message id="msgSexo" for="sexo"  />              
+                        <h:outputLabel for="email" value="Email"/>
+                        <p:inputText id ="email"  value="#{agregarCliente.cliente.clienteMail}" required="true" requiredMessage="Campo requerido">
+<!--                            <f:validator validatorId="emailValidator" />-->
+<!--                            <p:ajax event="blur" update="msgEmail" />-->
+                        </p:inputText>
+                        <p:message id="msgEmail" for="email"  />
+                        
+                        <h:outputLabel for="direccion" value="Direccion"/>
+                        <p:inputText id ="direccion"  value="#{agregarCliente.cliente.clienteDireccion}" required="true" requiredMessage="Campo requerido">
+<!--                            <p:ajax event="blur" update="msgDireccion" />-->
+                        </p:inputText>
+                        <p:message id="msgDireccion" for="direccion"  />
+
+                        <h:outputLabel for="telemer" value="Telefono Emergencia"/>
+                        <p:inputText id ="telemer" value="#{agregarCliente.cliente.clienteTelefonoEmergencia}" required="true" validatorMessage="Telefono Invalido" requiredMessage="Campo requerido">
+                            <f:validateLength minimum="7"/>
+<!--                            <p:ajax event="blur" update="msgTelemer" />-->
+                        </p:inputText>
+                        <p:message id="msgTelemer" for="telemer"  />
+                        <h:outputLabel for="telcont" value="Telefono Contacto" />
+                        <p:inputText id="telcont" value="#{agregarCliente.cliente.clienteTelefono}" required="true" validatorMessage="Telefono Invalido" requiredMessage="Campo requerido" >
+                            <f:validateLength minimum="7"/>
+<!--                            <p:ajax event="blur" update="msgTelcont" />-->
+                        </p:inputText>
+                        <p:message id="msgTelcont" for="telcont"  />
+                    </h:panelGrid>
+                </p:panel>
+            </p:tab>
+            
+            <p:tab id="eleccionPlan" title="Plan">  
+                <p:panel header="Planes" >
+                    <p:dataTable id="planes" var="plan" value="#{agregarCliente.planes}" rowKey="#{plan.planId}"  
+                                 selection="#{agregarCliente.planSeleccionado}" selectionMode="single">  
+
+                        <f:facet name="header">  
+                            Haga Click en un Plan para seleccionar  
+                        </f:facet>  
+
+                        <p:column headerText="Nombre">  
+                            #{plan.planNombre}  
+                        </p:column>  
+
+                        <p:column headerText="Precio">  
+                            #{plan.planPrecio}  
+                        </p:column>  
+
+                        <p:column headerText="Descripcion" >  
+                            #{plan.planDescripcion}  
+                        </p:column> 
+                        <p:ajax event="rowSelect" listener="#{agregarCliente.onRowSelect}" update=":form:panelDetalle"  />  
+                    </p:dataTable>
+                    <p:separator />
+                    <p:panel id="panelDetalle" header="Detalle del Plan" >
+                        <h:panelGrid columns="3">
+
+                            <h:outputLabel for="planSelNom" value="Nombre" />
+                            <p:inputText readonly="true" id="planSelNom" value="#{agregarCliente.planSeleccionado.planNombre}"/>
+                            <p:message id="msgplanSelNom" for="planSelNom" /> 
+
+                            <h:outputLabel for="planSelDesc" value="Descripcion" />
+                            <p:inputTextarea readonly="true" id="planSelDesc" value="#{agregarCliente.planSeleccionado.planDescripcion}"/>
+                            <p:message id="msgplanSelDesc" for="planSelDesc" /> 
+
+                            <h:outputLabel for="planObs" value="Observaciones" />
+                            <p:inputTextarea  id="planObs" value="#{agregarCliente.planContratado.planContratadoObservacion}"/>
+                            <p:message id="msgplanObs" for="planObs" /> 
+
+                            <h:outputLabel  for="fechaini" value="Inicio"/>
+                            <p:calendar  pattern="dd/MM/yyyy" id="fechaini" value="#{agregarCliente.planContratado.planContratadoFechaPago}" required="true" requiredMessage="Campo requerido" navigator="true" >
+                            </p:calendar>
+                            <p:message id="msgFechaini" for="fechaini" /> 
+
+                            <h:outputLabel  for="fechafin" value="Termino"/>
+                            <p:calendar  pattern="dd/MM/yyyy" id="fechafin" value="#{agregarCliente.planContratado.planContratadoFechaPago}" required="true" requiredMessage="Campo requerido" navigator="true" >
+                            </p:calendar>
+                            <p:message id="msgFechafin" for="fechafin" />  
+
+
+                            <h:outputLabel for="planSelPre" value="Precio" />
+                            <p:inputText  id="planSelPre" value="#{agregarCliente.planContratado.planContratadoMonto}">
+                                <p:ajax event="blur" update="msgPrecio" />
+                            </p:inputText>
+                            <p:message id="msgPrecio" for="planSelPre" /> 
+
+                        </h:panelGrid>
+                    </p:panel>
+                </p:panel> 
+            </p:tab>                   
+            <p:tab id="confirmacion" title="Confirmacion">  
+                <p:panel header="Datos Cliente" >
+                    <p:panelGrid columns="2">
+ 
+                        <h:outputLabel for="rutConfirm" value="Rut"/>
+                        <h:outputLabel  id="rutConfirm" value="#{agregarCliente.cliente.clienteRut}"/>
+
+                        <h:outputLabel for="nombreConfirm" value="Nombre"/>
+                        <h:outputLabel  id="nombreConfirm" value="#{agregarCliente.cliente.clienteNombre}" />
+
+                        <h:outputLabel  for="apellidosConfirm" value="Apellidos" />
+                        <h:outputLabel id ="apellidosConfirm"  value="#{agregarCliente.cliente.clienteApellido}" />
+
+                        <h:outputLabel for="fechanacConfirm" value="Fecha Nacimiento"/>
+                        <h:outputLabel  id="fechanacConfirm" value="#{agregarCliente.cliente.clienteFechaNacimiento}" />
+
+                        <h:outputLabel  for="sexoConfirm" value="Sexo"/>
+                        <h:outputLabel  id="sexoConfirm" value="#{agregarCliente.cliente.clienteSexo}"/>  
+
+
+                        <h:outputLabel for="emailConfirm" value="Email"/>
+                        <h:outputLabel id ="emailConfirm"  value="#{agregarCliente.cliente.clienteMail}" />
+
+                        <h:outputLabel for="telemerConfirm" value="Telefono Emergencia"/>
+                        <h:outputLabel id ="telemerConfirm" value="#{agregarCliente.cliente.clienteTelefonoEmergencia}"/>
+
+
+                        <h:outputLabel for="telcontConfirm" value="Telefono Contacto" />
+                        <h:outputLabel id="telcontConfirm" value="#{agregarCliente.cliente.clienteTelefono}"/>
+
+                        <h:outputLabel for="planSeleccionadoConfirm" value="Plan Contratado" />
+                        <h:outputLabel id="planSeleccionadoConfirm" value="#{agregarCliente.planSeleccionado.planNombre}"/>
+
+                        <h:outputLabel for="planSeleccionadoPrecio" value="Total a pagar" />
+                        <h:outputLabel id="planSeleccionadoPrecio" value="#{agregarCliente.planContratado.planContratadoMonto}"/>
+
+                        <p:commandButton process="@this"  onclick="confirmation.show();" value="Ingresar Cliente"/>
+
+                    </p:panelGrid>
+                </p:panel>
+            </p:tab> 
+        </p:wizard>
+    </h:form>
+
+    <p:confirmDialog id="confirmDialog" message="¿Esta seguro de agregar el cliente?" header="Nuevo Cliente" severity="alert" widgetVar="confirmation"> 
         <h:form>
-            <p:growl id="growl" sticky="true" showDetail="true"/>  
 
-            <p:wizard flowListener="#{agregarCliente.onFlowProcess}">  
+            <p:commandButton  action="#{agregarCliente.addCliente()}" value="Si"/>
+            <p:commandButton  onclick="confirmation.hide();" value="No"/>
 
-                <p:tab id="personal" title="Personal">  
-
-                    <p:panel header="Personal Details">  
-
-                        <h:messages errorClass="error"/>  
-
-                        <h:panelGrid columns="2" columnClasses="label, value" styleClass="grid">  
-                            <h:outputText value="Nombre: *" />  
-                            <h:inputText  required="true" label="Nombre"  
-                                         value="#{agregarCliente.cliente.rutCliente}" />  
-
-                            <h:outputText value="Apellido: *" />  
-                            <p:inputText required="true" label="Apellido"  
-                                         value="#{userWizard.user.lastname}" />  
-
-                            <h:outputText value="Rut: *" />  
-                            <p:inputText value="#{cliente.rutCliente}" />
-
-                            <h:outputText value="Fecha de Nacimiento: *" />  
-                            <p:inputText required="true" label="Fecha de Nacimiento"  
-                                         value="#{userWizard.user.fechaNacimiento}" />                            
-
-                            <h:outputText value="Sexo: *" />  
-                            <p:inputText required="true" label="Sexo"  
-                                         value="#{userWizard.user.sexo}" />
-
-                            <h:outputText value="Estado Civil: " />  
-                            <p:inputText required="false" label="Estado Civil"  
-                                         value="#{userWizard.user.estadoCivil}" />
-
-                            <h:outputText value="Skip to last: " />  
-                            <h:selectBooleanCheckbox value="#{userWizard.skip}" />  
-                        </h:panelGrid>  
-                    </p:panel>  
-                </p:tab>  
-
-                <p:tab id="address" title="Address">  
-                    <p:panel header="Adress Details">  
-
-                        <h:messages errorClass="error"/>  
-
-                        <h:panelGrid columns="2" columnClasses="label, value">  
-                            <h:outputText value="Dirección: *" />  
-                            <p:inputText required="true" label="Direccion"  
-                                         value="#{userWizard.user.direccion}" /> 
-
-                            <h:outputText value="Mail: " />  
-                            <p:inputText required="false" label="Mail"  
-                                         value="#{userWizard.user.mail}" />
-
-                            <h:outputText value="Telefono: " />  
-                            <p:inputText required="false" label="Telefono"  
-                                         value="#{userWizard.user.telefono}" />
-
-                            <h:outputText value="Telefono de Emergencia: " />  
-                            <p:inputText required="false" label="Telefono de Emergencia"  
-                                         value="#{userWizard.user.telEmergencia}" />
-
-
-                        </h:panelGrid>  
-                    </p:panel>  
-                </p:tab>                 
-
-                <p:tab id="confirm" title="Confirmation">  
-                    <p:panel header="Confirmation">  
-
-                        <h:panelGrid id="confirmation" columns="6">  
-                            <h:outputText value="Nombre: " />  
-                            <h:outputText styleClass="outputLabel"  
-                                          value="#{userWizard.user.nombre}" />  
-
-                            <h:outputText value="Apellido: " />  
-                            <h:outputText  styleClass="outputLabel"  
-                                           value="#{userWizard.user.apellido}"/>  
-
-                            <h:outputText value="Rut: " />  
-                            <h:outputText styleClass="outputLabel"  
-                                          value="#{userWizard.user.rut}" />>  
-
-                            <h:outputText value="Fecha de Nacimiento: " />  
-                            <h:outputText styleClass="outputLabel"  
-                                          value="#{userWizard.user.fechaNacimiento}" />  
-
-                            <h:outputText value="Sexo: " />  
-                            <h:outputText styleClass="outputLabel"  
-                                          value="#{userWizard.user.sexo}" />  
-
-                            <h:outputText value="Estado Civil: " />  
-                            <h:outputText styleClass="outputLabel"  
-                                          value="#{userWizard.user.estadoCivil}" />  
-
-                            <h:outputText value="Direccion: " />  
-                            <h:outputText styleClass="outputLabel"  
-                                          value="#{userWizard.user.direccion}" />  
-
-                            <h:outputText value="Mail: " />  
-                            <h:outputText styleClass="outputLabel"  
-                                          value="#{userWizard.user.mail}"/>  
-
-                            <h:outputText value="Telefono: " />  
-                            <h:outputText styleClass="outputLabel"  
-                                          value="#{userWizard.user.telefono}" />
-
-                            <h:outputText value="Telefono de Emergencia: " />  
-                            <h:outputText styleClass="outputLabel"  
-                                          value="#{userWizard.user.telEmergencia}" />
-
-                            <h:outputText />  
-                            <h:outputText />  
-                        </h:panelGrid>  
-
-                        <p:commandButton value="Crear" update="growl"   
-                                         actionListener="#{userWizard.save}"/>  
-
-                    </p:panel>  
-                </p:tab>  
-
-            </p:wizard>  
         </h:form>
+    </p:confirmDialog> 
 
-    </h:body>
 </html>
-

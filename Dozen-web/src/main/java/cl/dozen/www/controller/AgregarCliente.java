@@ -6,25 +6,51 @@
 
 package cl.dozen.www.controller;
 
-import cl.dozen.www.model.Cliente;
+import cl.dozen.www.entities.Cliente;
+import cl.dozen.www.entities.Plan;
+import cl.dozen.www.entities.PlanContratado;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
+import javax.faces.FacesException;
+import javax.faces.context.FacesContext;
+import javax.imageio.stream.FileImageOutputStream;
 import javax.inject.Named;
+import javax.servlet.ServletContext;
+import org.primefaces.event.CaptureEvent;
 import org.primefaces.event.FlowEvent;
+import cl.dozen.www.facade.PlanFacadeLocal;
+import java.io.Serializable;
+import javax.enterprise.context.Conversation;
+import javax.enterprise.context.ConversationScoped;
+import javax.inject.Inject;
 
 /**
  *
  * @author sergio
  */
 @Named
-@RequestScoped
-public class AgregarCliente {
-    
+@ConversationScoped
+public class AgregarCliente implements Serializable{
+    //me permite obtener todos los planes desdes la DB
+    @EJB
+    private PlanFacadeLocal planFacade;
+    //manater conversacion entre datos
     @Inject
+    private Conversation conversation;
+    //cliente de la vista, del tipo entities
     private Cliente cliente;
-    
+    //lista de planes obtenidos desde al facade
+    private List<Plan> planes;
+    //plan seleccionado por el cliente
+    private Plan planSeleccionado;
+    //relacion entre plan seleccionado con cliente
+    private PlanContratado planContratado;
+    //mostrar mensajes en el servidor de aplicaciones
     private static Logger logger = Logger.getLogger(AgregarCliente.class.getName());  
 
     public AgregarCliente() {
@@ -32,9 +58,67 @@ public class AgregarCliente {
     
     @PostConstruct
     public void init(){
-        cliente.setRutCliente(63871613);
+        
+        cliente = new Cliente(2);
+        
+        cliente.setClienteRut(177083186);
+        cliente.setClienteNombre("sergio");
+        cliente.setClienteApellido("peñaloza");
+        cliente.setClienteDireccion("renca");
+        cliente.setClienteMail("gergio@hotmail.com");
+        cliente.setClienteTelefono(2878967);
+        cliente.setClienteTelefonoEmergencia(2898989);
+        cliente.setClienteSexo(new Character('k'));
+        
+        planes = planFacade.findAll();
+        
+        planContratado = new PlanContratado();
+  
+    }
+    
+    public void beginConversation()
+   {
+      if (conversation.isTransient())
+      {
+          conversation.begin();
+      }
+   }
+ 
+   public void endConversation()
+   {
+      if (!conversation.isTransient())
+      {
+          conversation.end();
+      }
+   }
+
+    public PlanContratado getPlanContratado() {
+        return planContratado;
     }
 
+    public void setPlanContratado(PlanContratado planContratado) {
+        this.planContratado = planContratado;
+    }
+
+    
+    
+    
+    public Plan getPlanSeleccionado() {
+        return planSeleccionado;
+    }
+
+    public void setPlanSeleccionado(Plan planSeleccionado) {
+        this.planSeleccionado = planSeleccionado;
+    }
+    
+    public List<cl.dozen.www.entities.Plan> getPlanes() {
+        return planes;
+    }
+
+    public void setPlanes(List<cl.dozen.www.entities.Plan> planes) {
+        this.planes = planes;
+    }
+    
     public Cliente getCliente() {
         return cliente;
     }
@@ -43,16 +127,26 @@ public class AgregarCliente {
         this.cliente = cliente;
     }
     
+    
+    
     public void agregarCliente(){
            // agregar cliente a la BD
         
+        
+        endConversation();;
+        
+        
+    }
+    
+   public void onRowSelect() {
+        planContratado.setPlanContratadoMonto( planSeleccionado.getPlanPrecio());
     }
     
     public String onFlowProcess(FlowEvent event) {  
         logger.info("Current wizard step:" + event.getOldStep());  
         logger.info("Next step:" + event.getNewStep()); 
         
-        logger.info(cliente.getRutCliente().toString());
+         logger.info(cliente.toString());
         
         return event.getNewStep();  
          
