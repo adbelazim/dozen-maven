@@ -59,6 +59,9 @@ public class AgregarCliente implements Serializable{
     @PostConstruct
     public void init(){
         
+                 FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+
+        
         cliente = new Cliente(2);
         
         cliente.setClienteRut(177083186);
@@ -73,6 +76,7 @@ public class AgregarCliente implements Serializable{
         planes = planFacade.findAll();
         
         planContratado = new PlanContratado();
+        
   
     }
     
