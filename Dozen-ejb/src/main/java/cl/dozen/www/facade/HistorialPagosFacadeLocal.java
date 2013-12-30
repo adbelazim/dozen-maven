@@ -12,7 +12,7 @@ import javax.ejb.Local;
 
 /**
  *
- * @author cristobal
+ * @author root
  */
 @Local
 public interface HistorialPagosFacadeLocal {

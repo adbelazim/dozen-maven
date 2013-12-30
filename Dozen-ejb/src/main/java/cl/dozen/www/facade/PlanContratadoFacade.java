@@ -13,11 +13,11 @@ import javax.persistence.PersistenceContext;
 
 /**
  *
- * @author cristobal
+ * @author root
  */
 @Stateless
 public class PlanContratadoFacade extends AbstractFacade<PlanContratado> implements PlanContratadoFacadeLocal {
-    @PersistenceContext(unitName = "cl.dozen_Dozen-ejb_ejb_1.0PU")
+    @PersistenceContext(unitName = "DozenPU")
     private EntityManager em;
 
     @Override
